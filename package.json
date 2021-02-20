@@ -1,0 +1,23 @@
+{
+  "type": "module",
+  "name": "plagiarism-checker",
+  "version": "1.0.0",
+  "description": "Compare audios and check similarity",
+  "main": "index.js",
+  "devDependencies": {
+    "prettier": "2.2.1"
+  },
+  "scripts": {
+    "start": "node src/index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/matheuslino/plagiarism-checker.git"
+  },
+  "author": "Matheus A. Lino",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/matheuslino/plagiarism-checker/issues"
+  },
+  "homepage": "https://github.com/matheuslino/plagiarism-checker#readme"
+}
