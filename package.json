@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/matheuslino/plagiarism-checker/issues"
   },
-  "homepage": "https://github.com/matheuslino/plagiarism-checker#readme"
+  "homepage": "https://github.com/matheuslino/plagiarism-checker#readme",
+  "dependencies": {
+    "string-similarity": "^4.0.4"
+  }
 }
