@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { getVideoMatch } from "./useCases/getVideoMatch/getVideoMatch.js";
 
 const router = Router();
 
@@ -7,8 +8,9 @@ const response = {
   message: "resource not foud",
 };
 
-router.get("/video-match", (req, res) => {
-  response.message = "";
+router.get("/video-match/:sourceVideo/:cutVideo", (req, res) => {
+  const { sourceVideo, cutVideo } = req.params;
+  const response = getVideoMatch(sourceVideo, cutVideo);
   return res.status(200).send(response);
 });
 
