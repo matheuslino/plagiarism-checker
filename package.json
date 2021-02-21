@@ -5,9 +5,9 @@
   "description": "Compare audios and check similarity",
   "main": "server/server.js",
   "dependencies": {
-    "express": "^4.17.1",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",
+    "express": "^4.17.1",
     "string-similarity": "^4.0.4"
   },
   "devDependencies": {
