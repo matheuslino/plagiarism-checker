@@ -1,12 +1,21 @@
+import dotenv from "dotenv";
 import axios from "axios";
+
+dotenv.config();
 
 const getTranscription = async (videoId) => {
   try {
-    const response = await axios.get(
-      `https://www.googleapis.com/youtube/v3/captions/${videoId}`
-    );
+    const response = await axios.request({
+      method: "GET",
+      url: `https://subtitles-for-youtube.p.rapidapi.com/subtitles/${videoId}`,
+      headers: {
+        "x-rapidapi-key": process.env.RAPID_API_KEY,
+        "x-rapidapi-host": "subtitles-for-youtube.p.rapidapi.com",
+      },
+    });
+
     if (response.status === 200) {
-      console.log("response", response);
+      return response.data;
     } else {
       throw response.data;
     }

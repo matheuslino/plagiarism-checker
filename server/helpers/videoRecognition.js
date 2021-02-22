@@ -27,28 +27,30 @@ const convertTranscription = (obj) => {
 };
 
 const findMatch = (cutVideo, sourceVideo, accuracy) => {
-  const timeSpent = Date.now();
-  const cut = convertTranscription(cutVideo);
-  const source = convertTranscription(sourceVideo);
   const initial = {
     start: { text: null, time: null, formattedTime: null, accuracy: {} },
     end: { text: null, time: null, formattedTime: null, accuracy: {} },
     accuracyList: [],
   };
 
-  const cutSize = cut.length - 1;
-  const cutDuration =
-    cut[cutSize]?.start + cut[cutSize]?.duration - cut[0]?.start;
+  const cutVideoSize = cutVideo.length - 1;
+  const cutVideoDuration =
+    cutVideo[cutVideoSize]?.start +
+    cutVideo[cutVideoSize]?.dur -
+    cutVideo[0]?.start;
   let accuracyList = [];
   let matches = [];
   let startAt = 0;
 
-  for (let i = 0; i < cut.length; i++) {
+  for (let i = 0; i < cutVideo.length; i++) {
     const pos = matches.length ? matches.length - 1 : 0;
 
-    for (let j = startAt; j < source.length; j++) {
+    for (let j = startAt; j < sourceVideo.length; j++) {
       const similarity = parseFloat(
-        stringSimilarity.compareTwoStrings(cut[i].text, source[j].text) * 100
+        stringSimilarity.compareTwoStrings(
+          cutVideo[i].text,
+          sourceVideo[j].text
+        ) * 100
       ).toFixed(2);
 
       if (!accuracyList.includes(similarity)) accuracyList.push(similarity);
@@ -56,34 +58,37 @@ const findMatch = (cutVideo, sourceVideo, accuracy) => {
       if (similarity >= accuracy) {
         if (!matches[pos]?.start?.time) {
           const obj = { ...initial };
-          obj.start.text = source[j].text;
-          obj.start.time = source[j].start;
-          obj.start.formattedTime = source[j].startFormatted;
+          obj.start.text = sourceVideo[j].text;
+          obj.start.time = sourceVideo[j].start;
+          obj.start.formattedTime = sourceVideo[j].startFormatted;
 
           matches.push(obj);
 
           // update startAt to not process frames BEFORE this point in next iterations
-          startAt = source.findIndex((el) => el.start === source[j].start);
+          startAt = sourceVideo.findIndex(
+            (el) => el.start === sourceVideo[j].start
+          );
 
           matches[pos].start.accuracy = {
-            cut: similarity + "%",
-            cut: cut[i].text,
-            original: source[j].text,
+            cutVideo: similarity + "%",
+            cutVideo: cutVideo[i].text,
+            original: sourceVideo[j].text,
           };
 
           break;
         } else {
-          if (source[j].start - matches[pos].start.time > cutDuration) break;
+          if (sourceVideo[j].start - matches[pos].start.time > cutVideoDuration)
+            break;
 
-          matches[pos].end.text = source[j].text;
-          matches[pos].end.time = source[j].start;
-          matches[pos].end.formattedTime = source[j].startFormatted;
+          matches[pos].end.text = sourceVideo[j].text;
+          matches[pos].end.time = sourceVideo[j].start;
+          matches[pos].end.formattedTime = sourceVideo[j].startFormatted;
 
           // TEMP
           matches[pos].end.accuracy = {
-            cut: similarity + "%",
-            cut: cut[i].text,
-            original: source[j].text,
+            cutVideo: similarity + "%",
+            cutVideo: cutVideo[i].text,
+            original: sourceVideo[j].text,
           };
         }
       }
@@ -91,9 +96,6 @@ const findMatch = (cutVideo, sourceVideo, accuracy) => {
 
     accuracyList.sort((a, b) => b - a);
     if (matches[pos]) matches[pos].accuracyList = accuracyList;
-
-    // Total time spent
-    matches.timeSpent = Date.now() - timeSpent + "ms";
 
     // Remove element if any end match was found
     // if (!matches[pos]?.end?.time) matches.pop();

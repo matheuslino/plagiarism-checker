@@ -6,15 +6,12 @@ import { findMatch } from "../../helpers/videoRecognition.js";
 // import fullTranscript from "../../transcripts/full.js";
 
 const getVideoMatch = async (sourceVideo, cutVideo) => {
+  const spentTime = Date.now();
   const fullTranscript = await getTranscription(sourceVideo);
   const cutTranscript = await getTranscription(cutVideo);
   let message;
   let matches = [];
   let error = [];
-
-  //TEMP
-  console.log("Cut", cutTranscript);
-  console.log("Cut1", fullTranscript);
 
   if (cutTranscript?.length > 0 && fullTranscript?.length > 0) {
     matches = findMatch(cutTranscript, fullTranscript, 70);
@@ -36,7 +33,8 @@ const getVideoMatch = async (sourceVideo, cutVideo) => {
 
   return {
     message,
-    matches,
+    spentTime: Date.now() - spentTime + "ms",
+    matches: matches,
     error,
   };
 };
